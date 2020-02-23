@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body th:attr="onload=|init()|">
+<header th:replace="common.html :: header"></header>
+<section>
+    <h1 th:text="#{i18n.adminPage}"></h1>
+    <br>
+    <table id="tableUsers" class="table_users">
+        <tr>
+            <th th:text="#{i18n.email}"></th>
+            <th th:text="#{i18n.firstNameEn}"></th>
+            <th th:text="#{i18n.lastNameEn}"></th>
+            <th th:text="#{i18n.telNumber}"></th>
+            <th th:text="#{i18n.serviceType}"></th>
+            <th th:text="#{i18n.role}"></th>
+        </tr>
+        <tr th:each="user : ${users}" class="user_row">
+            <td id="email" th:text="${user.email}">email</td>
+            <td id="firstName" th:text="${user.firstName}">firstName</td>
+            <td id="lastName" th:text="${user.lastName}">lastName</td>
+            <td id="telNumber" th:text="${user.telNumber}">telNumber</td>
+            <td id="serviceType">
+                <input id="serviceType" type="hidden" th:value="${user.serviceType}"/>
+                <select id="select" th:name="${user.email}" th:attr="onChange=|setServiceType(this);|">
+                    <option th:each="serviceType : ${serviceTypes}"
+                            th:id="${serviceType}"
+                            th:text="#{${serviceType.i18n}}"
+                            th:value="${serviceType}"
+                            th:selected="${serviceType == user.serviceType}">
+                    </option>
+                </select>
+            </td>
+            <td id="role">
+                <input id="role" type="hidden" th:value="${user.role}"/>
+                <select id="select" th:name="${user.email}" th:attr="onChange=|setRole(this);|">
+                    <option th:each="role : ${roles}"
+                            th:id="${role}"
+                            th:text="#{${role.i18n}}"
+                            th:value="${role}"
+                            th:selected="${role == user.role}">
+                    </option>
+                </select>
+            </td>
+            <!-- 				<td id="actions" align="center"> -->
+            <!-- 					<a href="/" th:name="${user.email}" th:attr="onclick=|del(this); return false;|"> -->
+            <!-- 						<img src="/images/t_icon1.png" width="17px" alt="Delete" /> -->
+            <!-- 					</a> -->
+            <!-- 				</td> -->
+        </tr>
+    </table>
+</section>
+
+<script th:src="@{/js/toastr.js}"></script>
+<script th:src="@{/js/admin.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

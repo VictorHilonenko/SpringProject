@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body>
+<header th:replace="common.html :: header"></header>
+
+<section>
+    <div th:if="${param.success}">
+        <h3 th:text="#{i18n.congrats}"></h3>
+    </div>
+    <h1 th:text="#{i18n.registrationPage}"></h1>
+    <div class="form-cont">
+        <form th:action="@{/registration}" th:object="${user}" method="post">
+            <div class="text_alert" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.errors('global')}"
+                 th:text="${error}">
+                Validation
+            </div>
+            <div th:classappend="${#fields.hasErrors('firstName')}? 'has-error':''">
+                <label for="firstName"><strong th:text="#{i18n.firstNameEn}">First Name</strong></label>:
+                <br>
+                <!-- border_alert: <input type="text" id="firstName" name="firstName" class="form-control border_alert" autofocus="autofocus" placeholder="First Name" value=""> -->
+                <input type="text" id="firstName" name="firstName" th:field="*{firstName}" class="form-control"
+                       autofocus="autofocus" th:placeholder="#{i18n.firstNameEn}"/>
+                <div th:each="error: ${#fields.errors('firstName')}" class="text_alert" th:text="#{${error}}"></div>
+            </div>
+            <div th:classappend="${#fields.hasErrors('lastName')}? 'has-error':''">
+                <label for="lastName"><strong th:text="#{i18n.lastNameEn}">Last Name</strong></label>:
+                <br>
+                <input type="text" id="lastName" name="lastName" th:field="*{lastName}" class="form-control"
+                       th:placeholder="#{i18n.lastNameEn}"/>
+                <div th:each="error: ${#fields.errors('lastName')}" class="text_alert" th:text="#{${error}}"></div>
+            </div>
+            <div th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
+                <label for="email"><strong th:text="#{i18n.email}">Email</strong></label>:
+                <br>
+                <input type="text" id="email" name="email" th:field="*{email}" class="form-control"
+                       th:placeholder="#{i18n.email}"/>
+                <div th:each="error: ${#fields.errors('email')}" class="text_alert" th:text="#{${error}}"></div>
+            </div>
+            <div th:classappend="${#fields.hasErrors('telNumber')}? 'has-error':''">
+                <label for="telNumber"><strong th:text="#{i18n.telNumber}">Telephone Number</strong></label>:
+                <br>
+                <input type="text" id="telNumber" name="telNumber" th:field="*{telNumber}" class="form-control"
+                       th:placeholder="#{i18n.telNumber}"/>
+                <div th:each="error: ${#fields.errors('telNumber')}" class="text_alert" th:text="#{${error}}"></div>
+            </div>
+            <div th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
+                <label for="password"><strong th:text="#{i18n.password}">Password</strong></label>:
+                <br>
+                <input type="password" id="password" name="password" th:field="*{password}" class="form-control"
+                       th:placeholder="#{i18n.password}"/>
+                <div th:each="error: ${#fields.errors('password')}" class="text_alert" th:text="#{${error}}"></div>
+            </div>
+            <input type="submit" class="send" th:value="#{i18n.register}"/>
+        </form>
+    </div>
+
+</section>
+
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body>
+<header th:replace="common.html :: header"></header>
+
+<section>
+    <h1 th:text="#{i18n.loginPage}"></h1>
+    <div class="form-cont">
+        <form th:action="@{/login}" method="post">
+            <div th:if="${param.error}">
+                <div class="text_alert" th:text="#{warning.invalidUsernameAndOrPassword}">Invalid username or password
+                </div>
+            </div>
+            <div th:if="${param.logout}">
+                <div class="alert alert-info">You have been logged out.</div>
+            </div>
+            <label for="username"><strong th:text="#{i18n.email}">Email</strong></label>:
+            <br>
+            <input type="text" id="username" name="username" class="form-control" autofocus="autofocus"
+                   th:placeholder="#{i18n.email}"/>
+            <br>
+            <label for="password"><strong th:text="#{i18n.password}">Password</strong></label>:
+            <br>
+            <input type="password" id="password" name="password" class="form-control"
+                   th:placeholder="#{i18n.password}"/>
+            <br>
+            <input type="submit" name="login-submit" id="login-submit" class="send" th:value="#{i18n.login}"
+                   value="Log In"/>
+        </form>
+    </div>
+</section>
+
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

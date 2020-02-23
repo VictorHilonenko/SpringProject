@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body>
+<header th:replace="common.html :: header"></header>
+<section>
+    <h1 th:text="#{i18n.feedbacks}"></h1>
+
+    <th:block th:if="${listFeedbacksToLeave != null}">
+        <div class="schedule_cont" th:if="${!listFeedbacksToLeave.isEmpty()}">
+            <h3 th:text="#{i18n.leaveYourFeedbacksPlease}"></h3>
+
+            <th:block th:each="feedback : ${listFeedbacksToLeave}">
+                <form method="POST" th:object="${feedback}">
+                    <div class="text_alert" th:if="${#fields.hasGlobalErrors()}"
+                         th:each="error : ${#fields.errors('global')}" th:text="${error}">
+                        Validation ${error}
+                    </div>
+
+                    <div class="form-block">
+                        <span class="popup_label" th:text="#{i18n.date}">Date:</span>
+                        <span th:text="${feedback.appointment.appointmentDate}"></span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="popup_label" th:text="#{i18n.time}">Time:</span>
+                        <span th:text="${feedback.appointment.appointmentTime}"></span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="popup_label" th:text="#{i18n.serviceType}">Service type:</span>
+                        <span th:text="#{${feedback.appointment.serviceType.i18n}}"></span>
+                    </div>
+
+                    <div class="form-block">
+                        <span class="popup_label" th:text="#{i18n.USER}">Customer:</span>
+                        <span th:text="${feedback.appointment.customer.firstName}"></span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="popup_label" th:text="#{i18n.MASTER}">Master:</span>
+                        <span th:text="${feedback.appointment.master.firstName}"></span>
+                    </div>
+
+                    <div class="form-block">
+                        <span class="popup_label" th:text="#{i18n.howDoYouRate}">How do you rate our service:</span>
+                        <br>
+                        <div class="text_alert" th:each="error: ${#fields.errors('rating')}" th:text="${error}">
+                            Validation ${error}
+                        </div>
+                        <div class="flex-container field">
+                            <input type="radio" name="rating" class="radio-button"
+                                   th:each="i : ${#numbers.sequence(1, 10)}"
+                                   th:value="${i}" th:id="'rating_'+${i}"
+                                   th:text="${i}">
+                        </div>
+                        <br>
+                        <span class="popup_label" th:text="#{i18n.yourTextHere}">Your text here:</span>
+                        <br>
+                        <textarea name="textMessage" class="popup_text field"></textarea>
+                        <div class="text_alert" th:each="error: ${#fields.errors('textMessage')}" th:text="${error}">
+                            Validation ${error}
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="id" class="popup_input field" th:value="${feedback.id}">
+                    <div class="text_alert" th:each="error: ${#fields.errors('id')}" th:text="${error}">
+                        Validation ${error}
+                    </div>
+
+                    <button type="submit" class="ui-button ui-corner-all ui-widget" th:text="#{i18n.leaveFeedback}">
+                        leave feedback
+                    </button>
+                </form>
+            </th:block>
+        </div>
+    </th:block>
+
+    <!-- for customers -->
+    <th:block th:if="${pageCustomersFeedbacks != null}">
+        <div class="schedule_cont" th:if="${pageCustomersFeedbacks.totalPages > 0}">
+            <h3 th:text="#{i18n.yourFeedbacks}"></h3>
+            <table class="table_schedule">
+                <tr>
+                    <th th:text="#{i18n.date}">Date</th>
+                    <th th:text="#{i18n.time}">Time</th>
+                    <th th:text="#{i18n.serviceType}">Service type</th>
+                    <th th:text="#{i18n.USER}">Customer</th>
+                    <th th:text="#{i18n.MASTER}">Master</th>
+                    <th th:text="#{i18n.rating}">Rating</th>
+                    <th th:text="#{i18n.text}">Text</th>
+                </tr>
+                <tr th:each="feedback : ${pageCustomersFeedbacks}">
+                    <td th:text="${feedback.appointment.appointmentDate}"></td>
+                    <td th:text="${feedback.appointment.appointmentTime}"></td>
+                    <td th:text="#{${feedback.appointment.serviceType.i18n}}"></td>
+                    <td th:text="${feedback.appointment.customer.firstName}"></td>
+                    <td th:text="${feedback.appointment.master.firstName}"></td>
+                    <td th:text="${feedback.rating}"></td>
+                    <td th:text="${feedback.textMessage}"></td>
+                </tr>
+            </table>
+            <div th:if="${pageCustomersFeedbacks.totalPages > 1}" class="pagination">
+                <a th:if="${pageCustomersFeedbacks.hasPrevious()}"
+                   th:href="@{/feedbacks(page=${pageCustomersFeedbacks.number-1})}">&laquo;</a>
+                <th:block th:each="i: ${#numbers.sequence(0, pageCustomersFeedbacks.totalPages - 1)}">
+                    <a th:if="${pageCustomersFeedbacks.number == i}" th:text="${i}+1" class="active"></a>
+                    <a th:unless="${pageCustomersFeedbacks.number == i}" th:href="@{/feedbacks(page=${i})}"
+                       th:text="${i}+1"></a>
+                </th:block>
+                <a th:if="${pageCustomersFeedbacks.hasNext()}"
+                   th:href="@{/feedbacks(page=${pageCustomersFeedbacks.number+1})}">&raquo;</a>
+            </div>
+        </div>
+        <div class="schedule_cont" th:unless="${pageCustomersFeedbacks.totalPages > 0}">
+            <h3 th:text="#{i18n.nothing_to_show}"></h3>
+        </div>
+    </th:block>
+
+</section>
+<br>
+<br>
+<br>
+
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

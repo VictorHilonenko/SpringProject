@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="Spring Beauty Sheduler">
+    <meta name="author" content="Victor Hilonenko">
+
+    <title th:text="#{i18n.title}">Beauty scheduler</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/toastr.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/jquery-ui.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+</head>
+<body>
+<header th:fragment="header">
+    <nav id="navigation-bar" class="main_nav">
+        <div id="nav-cont">
+            <a href="/" class="navbar-brand"><span class="logo_black">Beauty</span><span th:text="#{i18n.scheduler}"
+                                                                                         class="logo_white">Scheduler</span></a>
+            <div id="lang">
+                <a th:href="@{'?lang=uk'}"><img src="/images/uk_flag.jpg" width="25px" border="0" alt="UKR"/></a>&nbsp;
+                <a th:href="@{'?lang=en'}"><img src="/images/us_flag.jpg" width="25px" border="0" alt="ENG"/></a>
+            </div>
+            <div class="auth">
+                <div sec:authorize="!isAuthenticated()">
+                    <a href="/login" class="auth_link" th:text="#{i18n.login}">Log in</a>
+                    <span style="color:#ffffff;">|</span>
+                    <a href="/registration" class="auth_link" th:text="#{i18n.register}">Register</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a href="/" class="auth_link"><b id="username" sec:authentication="principal.username">Guest</b></a>
+                    <br>
+                    <a href="/logout" class="auth_link" th:text="#{i18n.logout}">Log out</a>
+                </div>
+            </div>
+            <div id="menu" class="menu">
+                <ul>
+                    <li><a href="/" th:text="#{i18n.scheduler}">Scheduler</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/feedbacks" th:text="#{i18n.feedbacks}">FeedBacks</a>
+                    </li>
+                    <li sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a href="/admin" th:text="#{i18n.administration}">Administration</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <input id="i18n_success" type="hidden" th:value="#{i18n.success}">
+    <input id="error_tryLater" type="hidden" th:value="#{error.tryLater}">
+</header>
+
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+</body>
+</html>

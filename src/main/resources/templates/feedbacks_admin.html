@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body>
+<header th:replace="common.html :: header"></header>
+<section>
+    <h1 th:text="#{i18n.feedbacks}"></h1>
+
+    <th:block th:if="${pageAllFeedbacksForRole != null}">
+        <div class="schedule_cont" th:if="${pageAllFeedbacksForRole.totalPages > 0}">
+            <h3 th:text="#{i18n.allFeedbacks}"></h3>
+
+            <table class="table_schedule">
+                <tr>
+                    <th th:text="#{i18n.date}">Date</th>
+                    <th th:text="#{i18n.time}">Time</th>
+                    <th th:text="#{i18n.serviceType}">Service type</th>
+                    <th th:text="#{i18n.USER}">Customer</th>
+                    <th th:text="#{i18n.MASTER}">Master</th>
+                    <th th:text="#{i18n.rating}">Rating</th>
+                    <th th:text="#{i18n.text}">Text</th>
+                </tr>
+                <tr th:each="feedback : ${pageAllFeedbacksForRole}">
+                    <td th:text="${feedback.appointment.appointmentDate}"></td>
+                    <td th:text="${feedback.appointment.appointmentTime}"></td>
+                    <td th:text="#{${feedback.appointment.serviceType.i18n}}"></td>
+                    <td th:text="${feedback.appointment.customer.firstName}"></td>
+                    <td th:text="${feedback.appointment.master.firstName}"></td>
+                    <td th:text="${feedback.rating}"></td>
+                    <td th:text="${feedback.textMessage}"></td>
+                </tr>
+            </table>
+
+            <div th:if="${pageAllFeedbacksForRole.totalPages > 1}" class="pagination">
+                <a th:if="${pageAllFeedbacksForRole.hasPrevious()}"
+                   th:href="@{/feedbacks(page=${pageAllFeedbacksForRole.number-1})}">&laquo;</a>
+                <th:block th:each="i: ${#numbers.sequence(0, pageAllFeedbacksForRole.totalPages - 1)}">
+                    <a th:if="${pageAllFeedbacksForRole.number == i}" th:text="${i}+1" class="active"></a>
+                    <a th:unless="${pageAllFeedbacksForRole.number == i}" th:href="@{/feedbacks(page=${i})}"
+                       th:text="${i}+1"></a>
+                </th:block>
+                <a th:if="${pageAllFeedbacksForRole.hasNext()}"
+                   th:href="@{/feedbacks(page=${pageAllFeedbacksForRole.number+1})}">&raquo;</a>
+            </div>
+        </div>
+        <div class="schedule_cont" th:unless="${pageAllFeedbacksForRole.totalPages > 0}">
+            <h3 th:text="#{i18n.nothing_to_show}"></h3>
+        </div>
+    </th:block>
+</section>
+<br>
+<br>
+<br>
+
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

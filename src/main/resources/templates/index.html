@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body onload="init()">
+<header th:replace="common.html :: header"></header>
+<section>
+    <h1><span th:text="#{i18n.appointments}"></span> <span id="headerDates" class="dates">06.01 - 12.01</span></h1>
+    <div class="add_new">
+        <a href="/" class="add_button" sec:authorize="isAuthenticated() && hasAuthority('ROLE_USER')"
+           th:attr="onclick=|openAppointment(null); return false;|" th:text="#{i18n.newAppointment}">
+            + New appointment
+        </a>
+        <a href="/" class="add_button" sec:authorize="!isAuthenticated()"
+           th:attr="onclick=|suggestRegistration(); return false;|" th:text="#{i18n.newAppointment}">
+            + New appointment
+        </a>
+    </div>
+    <div class="schedule_cont">
+        <table class="table_schedule">
+            <tr>
+                <th style="width: 7%">
+                    <a href="/" class="arrow_left" onclick="drawPrevWeek(); return false;"><img
+                            src="/images/arrow_left.png" width="17px" border="0" alt="prev week"></a>
+                    <a href="/" onclick="drawThisWeek(); return false;"><img src="/images/today.png" width="24px"
+                                                                             border="0" alt="This week"></a>
+                    <a href="/" class="arrow_right" onclick="drawNextWeek(); return false;"><img
+                            src="/images/arrow_right.png" width="17px" border="0" alt="next week"></a>
+                </th>
+                <th style="width: 10%"><span th:text="#{week.day0}"></span><br><span id="d0" class="dates"></span></th>
+                <th style="width: 10%"><span th:text="#{week.day1}"></span><br><span id="d1" class="dates"></span></th>
+                <th style="width: 10%"><span th:text="#{week.day2}"></span><br><span id="d2" class="dates"></span></th>
+                <th style="width: 10%"><span th:text="#{week.day3}"></span><br><span id="d3" class="dates"></span></th>
+                <th style="width: 10%"><span th:text="#{week.day4}"></span><br><span id="d4" class="dates"></span></th>
+                <th style="width: 10%"><span th:text="#{week.day5}"></span><br><span id="d5" class="dates"></span></th>
+                <th style="width: 10%"><span th:text="#{week.day6}"></span><br><span id="d6" class="dates"></span></th>
+            </tr>
+            <tr th:each="h : ${#numbers.sequence(WORK_TIME_STARTS, WORK_TIME_ENDS)}">
+                <th th:text="${h}+':00'">h:00</th>
+                <td th:id="'d0_'+${h}"></td>
+                <td th:id="'d1_'+${h}"></td>
+                <td th:id="'d2_'+${h}"></td>
+                <td th:id="'d3_'+${h}"></td>
+                <td th:id="'d4_'+${h}"></td>
+                <td th:id="'d5_'+${h}"></td>
+                <td th:id="'d6_'+${h}"></td>
+            </tr>
+        </table>
+    </div>
+</section>
+<br>
+<br>
+<br>
+
+<div id="dialog-login" th:title="#{i18n.newAppointmentTitle}" class="dialogs">
+    <span th:utext="#{i18n.newAppointmentText}"></span>
+</div>
+
+<div id="dialog-appointment" th:title="#{i18n.Appointment}" class="dialogs">
+    <div id="div_id" class="form-block">
+        <input type="text" id="id" class="popup_input field">
+    </div>
+
+    <div id="div_date" class="form-block">
+        <span id="i18n_date" class="popup_label" th:text="#{i18n.date}">Date:</span>
+        <input type="text" id="date" class="popup_input field">
+    </div>
+
+    <div id="div_time" class="form-block">
+        <span id="i18n_time" class="popup_label" th:text="#{i18n.time}">Time:</span>
+        <select id="time" class="popup_select field">
+            <option th:each="h : ${#numbers.sequence(WORK_TIME_STARTS, WORK_TIME_ENDS)}"
+                    th:value="${h}"
+                    th:text="${h}+':00'"
+                    th:selected="${h==0}">
+            </option>
+        </select>
+    </div>
+
+    <div id="div_serviceType" class="form-block">
+        <span id="i18n_service" class="popup_label" th:text="#{i18n.service}">Service type:</span>
+        <select id="serviceType" class="popup_select field">
+            <option th:attr="id=${serviceType}"
+                    th:each="serviceType : ${serviceTypes}"
+                    th:text="#{${serviceType.i18n}}"
+                    th:value="${serviceType}">
+            </option>
+        </select>
+    </div>
+
+    <div id="div_customer_name" class="form-block">
+        <span id="i18n_USER" class="popup_label" th:text="#{i18n.USER}">Customer:</span>
+        <input type="text" id="customer_name" class="popup_input field">
+    </div>
+
+    <div id="div_master_name" class="form-block">
+        <span id="i18n_MASTER" class="popup_label" th:text="#{i18n.MASTER}">Master:</span>
+        <input type="text" id="master_name" class="popup_input field">
+    </div>
+
+    <div id="div_serviceProvided" class="form-block">
+        <div class="flex-container">
+            <input type="checkbox" id="serviceProvided" class="checkbox field">
+            <span id="i18n_serviceProvided" class="popup_label4s"
+                  th:text="#{i18n.serviceProvided}">Service provided</span>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="week_shift" th:value="#{week.shift}"/>
+<input type="hidden" id="date_format_short" th:value="#{date.format.short}"/>
+<input type="hidden" id="date_format_long" th:value="#{date.format.long}"/>
+<input type="hidden" id="i18n_reserve" th:value="#{i18n.reserve}"/>
+<input type="hidden" id="i18n_save" th:value="#{i18n.save}"/>
+<input type="hidden" id="i18n_close" th:value="#{i18n.close}"/>
+
+<script th:src="@{/js/toastr.js}"></script>
+<script th:src="@{/js/datepicker-en.js}"></script>
+<script th:src="@{/js/datepicker-uk.js}"></script>
+<script th:src="@{/js/date.format.js}"></script>
+<script th:src="@{/js/scheduler.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

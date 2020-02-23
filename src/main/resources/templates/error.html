@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="common.html :: head"></head>
+<body>
+<header th:replace="common.html :: header"></header>
+
+<section>
+    <h1>An error occurred</h1>
+    <h1 style="color: red; font-size: 64px" th:text="${status}">ERROR</h1>
+    <h1 style="color: red" th:text="${message}"></h1>
+    <h1>please contact our maintenance service</h1>
+</section>
+
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>
