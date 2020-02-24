@@ -1,6 +1,6 @@
 <div align="center">
-	<a href="https://github.com/VictorHilonenko/ServletProject/tree/master/README.MD"><code>English</code></a>
-	<a href="https://github.com/VictorHilonenko/ServletProject/tree/master/README_uk.MD"><code>Українська</code></a>
+	<a href="https://github.com/VictorHilonenko/SpringProject/blob/master/README.MD"><code>English</code></a>
+	<a href="https://github.com/VictorHilonenko/SpringProject/blob/master/README_uk.MD"><code>Українська</code></a>
 </div>
 <hr>
 <div align="center">
