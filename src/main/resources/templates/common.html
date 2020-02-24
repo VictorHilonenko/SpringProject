@@ -29,9 +29,9 @@
             </div>
             <div class="auth">
                 <div sec:authorize="!isAuthenticated()">
-                    <a href="/login" class="auth_link" th:text="#{i18n.login}">Log in</a>
+                    <a id="i18n_login" href="/login" class="auth_link" th:text="#{i18n.login}">Log in</a>
                     <span style="color:#ffffff;">|</span>
-                    <a href="/registration" class="auth_link" th:text="#{i18n.register}">Register</a>
+                    <a id="i18n_register" href="/registration" class="auth_link" th:text="#{i18n.register}">Register</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <a href="/" class="auth_link"><b id="username" sec:authentication="principal.username">Guest</b></a>
